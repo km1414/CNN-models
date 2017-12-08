@@ -1,6 +1,6 @@
-## CNN-models
+# CNN-models
 
-# ResNet-32
+## ResNet-32
 
 ResNet-32 model for CIFAR-10 image recognition. <br />
 Keras. Python 3. <br />
