@@ -4,7 +4,6 @@ ResNet-32 model for CIFAR-10 image recognition.
 Inspired by:
     Deep Learning Specialization at Coursera
     https://github.com/fchollet/deep-learning-models/blob/master/resnet50.py
-    https://github.com/Hvass-Labs/TensorFlow-Tutorials/blob/master/cifar10.py
 
 Model architecture for CIFAR-10 dataset classification reproduced from original paper:
     https://arxiv.org/pdf/1512.03385.pdf
@@ -36,19 +35,19 @@ def building_block(X, filter_size, filters, stride=1):
     # Reshape shortcut for later adding if dimensions change
     if stride > 1:
 
-        X_shortcut = Conv2D(filters, (1, 1), strides=stride, padding='same', name='shortcut_conv')(X_shortcut)
-        X_shortcut = BatchNormalization(axis=3, name='shortcut_bn')(X_shortcut)
+        X_shortcut = Conv2D(filters, (1, 1), strides=stride, padding='same')(X_shortcut)
+        X_shortcut = BatchNormalization(axis=3)(X_shortcut)
 
     # First layer of the block
-    X = Conv2D(filters, kernel_size = filter_size, strides=stride, padding='same', name='conv_a')(X)
-    X = BatchNormalization(axis=3, name='bn_a')(X)
-    X = Activation('relu', name='act_a')(X)
+    X = Conv2D(filters, kernel_size = filter_size, strides=stride, padding='same')(X)
+    X = BatchNormalization(axis=3)(X)
+    X = Activation('relu')(X)
 
     # Second layer of the block
-    X = Conv2D(filters, kernel_size = filter_size, strides=(1, 1), padding='same', name='conv_b')(X)
-    X = BatchNormalization(axis=3, name='bn_b')(X)
+    X = Conv2D(filters, kernel_size = filter_size, strides=(1, 1), padding='same')(X)
+    X = BatchNormalization(axis=3)(X)
     X = add([X, X_shortcut])  # Add shortcut value to main path
-    X = Activation('relu', name='act_b')(X)
+    X = Activation('relu')(X)
 
     return X
 
@@ -60,9 +59,9 @@ def create_model(input_shape, classes, name):
     X_input = Input(input_shape)
 
     # Stage 1
-    X = Conv2D(filters=16, kernel_size=3, strides=(1, 1), padding='same', name='conv')(X_input)
-    X = BatchNormalization(axis=3, name='bn')(X)
-    X = Activation('relu', name='act')(X)
+    X = Conv2D(filters=16, kernel_size=3, strides=(1, 1), padding='same')(X_input)
+    X = BatchNormalization(axis=3)(X)
+    X = Activation('relu')(X)
 
     # Stage 2
     X = building_block(X, filter_size=3, filters=16, stride=1)
@@ -86,8 +85,8 @@ def create_model(input_shape, classes, name):
     X = building_block(X, filter_size=3, filters=64, stride=1)
 
     # Average pooling and output layer
-    X = GlobalAveragePooling2D(name="avg_pool")(X)
-    X = Dense(classes, activation='softmax', name='fc')(X)
+    X = GlobalAveragePooling2D()(X)
+    X = Dense(classes, activation='softmax')(X)
 
     # Create model
     model = Model(inputs=X_input, outputs=X, name=name)
@@ -112,14 +111,13 @@ datagen = ImageDataGenerator(
 # Train model
 results = ResNet32.fit_generator(datagen.flow(x_train, y_train,
                                  batch_size = 250),
-                                 epochs = 1000,
+                                 epochs = 100,
                                  steps_per_epoch=200,  # data_size/batch size
                                  validation_data=(x_test, y_test))
 
 
 # Plot train / validation results
 plot_results(results)
-
 
 # Print model architecture
 ResNet32.summary()
