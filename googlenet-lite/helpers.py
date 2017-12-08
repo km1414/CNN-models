@@ -132,9 +132,9 @@ def plot_results(results):
     pl.figure()
 
     pl.subplot(121)
-    pl.plot(results.history['acc'])
+    pl.plot(results.history['dense_5_acc'])
     pl.title('Accuracy:')
-    pl.plot(results.history['val_acc'])
+    pl.plot(results.history['val_dense_5_acc'])
     pl.legend(('Train', 'Validation'))
 
     pl.subplot(122)
