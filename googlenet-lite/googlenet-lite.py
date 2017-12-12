@@ -160,7 +160,7 @@ for epoch in range(epochs):
     # Schedule learning rate changes
     if (epoch % 200 == 1) or (epoch % 250 == 1):
         lr = K.eval(GoogLeNet.optimizer.lr)
-        lr = K.eval(GoogLeNet.optimizer.lr.assign(lr / 4))
+        lr = K.eval(GoogLeNet.optimizer.lr.assign(lr/4))
 
 
 # Plot train / validation results
