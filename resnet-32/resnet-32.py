@@ -115,9 +115,10 @@ results = ResNet32.fit_generator(datagen.flow(x_train, y_train,
                                  steps_per_epoch=200,  # data_size/batch size
                                  validation_data=(x_test, y_test))
 
-
 # Plot train / validation results
 plot_results(results)
 
 # Print model architecture
 ResNet32.summary()
+
+
