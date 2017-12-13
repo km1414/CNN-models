@@ -128,13 +128,12 @@ datagen = ImageDataGenerator(
             rotation_range=45,  # randomly rotate images in the range (degrees, 0 to 180)
             width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
             height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
-            horizontal_flip=True,  # randomly flip images
-            vertical_flip=True,
-            zoom_range=0.1)
+            horizontal_flip=True)  # randomly flip images
+
 
 
 history = {'train_acc':[], 'train_loss':[], 'test_acc':[], 'test_loss':[]}
-epochs = 100
+epochs = 50
 
 
 # Training loop
@@ -155,7 +154,7 @@ for epoch in range(epochs):
     history['train_acc'].append(results.history['dense_5_acc'][0])
     history['train_loss'].append(results.history['dense_5_loss'][0])
     history['test_acc'].append(results.history['val_dense_5_acc'][0])
-    history['test_loss'].append(results.history['val_dense_5_acc'][0])
+    history['test_loss'].append(results.history['val_dense_5_loss'][0])
 
     # Schedule learning rate changes
     if (epoch % 200 == 1) or (epoch % 250 == 1):
