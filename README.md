@@ -30,5 +30,5 @@ GoogLeNet-lite (Inception_v1) model for CIFAR-10 image recognition. <br />
 Keras. Python 3. <br />
 Paper: https://arxiv.org/pdf/1409.4842.pdf <br />
 Some results: <br />
-![](/googlenet-lite/GoogLeNet-lite_epochs_300_small.png) <br /
+![](/googlenet-lite/GoogLeNet_epochs_300_small.png) <br />
 
