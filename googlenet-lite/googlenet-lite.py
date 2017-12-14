@@ -133,13 +133,12 @@ datagen = ImageDataGenerator(
 
 
 history = {'train_acc':[], 'train_loss':[], 'test_acc':[], 'test_loss':[]}
-epochs = 50
+epochs = 300
 
 
 # Training loop
 for epoch in range(epochs):
 
-    print('Epoch:', epoch)
     # Processing data augmentation on full data set
     x_train_aug, y_train_aug = datagen.flow(x_train, y_train, batch_size=len(x_train), shuffle=True).next()
     # Free unused memory
@@ -148,7 +147,8 @@ for epoch in range(epochs):
     results = GoogLeNet.fit(x=x_train_aug, y=[y_train_aug, y_train_aug, y_train_aug],
                             epochs=1,
                             batch_size=250,
-                            validation_data=(x_test, [y_test, y_test, y_test]))
+                            validation_data=(x_test, [y_test, y_test, y_test]),
+                            verbose=0)
 
     # Save epoch results
     history['train_acc'].append(results.history['dense_5_acc'][0])
@@ -157,9 +157,16 @@ for epoch in range(epochs):
     history['test_loss'].append(results.history['val_dense_5_loss'][0])
 
     # Schedule learning rate changes
-    if (epoch % 200 == 1) or (epoch % 250 == 1):
-        lr = K.eval(GoogLeNet.optimizer.lr)
-        lr = K.eval(GoogLeNet.optimizer.lr.assign(lr/4))
+    lr = K.eval(GoogLeNet.optimizer.lr)
+    if (epoch == 99) or (epoch == 199):
+        K.set_value(GoogLeNet.optimizer.lr, lr/(1+1))
+
+    # Print epoch results
+    print('Epoch: '+str(epoch)+'/'+str(epochs-1), 'Learning rate:', lr,
+          'Train_acc:', history['train_acc'][-1].round(4),
+          'Train_loss:', history['train_loss'][-1].round(4),
+          'Test_acc:', history['test_acc'][-1].round(4),
+          'Test_loss:', history['test_loss'][-1].round(4))
 
 
 # Plot train / validation results
