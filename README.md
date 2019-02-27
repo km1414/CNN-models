@@ -32,3 +32,4 @@ Paper: https://arxiv.org/pdf/1409.4842.pdf <br />
 Some results: <br />
 ![](/googlenet-lite/GoogLeNet_epochs_300_small.png) <br />
 
+gdgdgd
