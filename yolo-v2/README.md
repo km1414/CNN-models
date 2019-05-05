@@ -4,7 +4,7 @@
 YOLO v2 model for objects detection from image, video and live stream from webcam. 
 Runs on pre-trained weights, GPU is preferred, CPU works as well.
 
-<img src="gifs/gif_1.gif" height="100"/><img src="gifs/gif_2.gif" height="100"/><img src="gifs/gif_2.gif" height="100"/>
+<img src="gifs/gif_1.gif" height="150"/> <img src="gifs/gif_2.gif" height="150"/> <img src="gifs/gif_3.gif" height="150"/>
 
 Papers: 
 * https://arxiv.org/pdf/1506.02640.pdf
@@ -13,7 +13,7 @@ Papers:
 Website: 
 * https://pjreddie.com/darknet/yolo/ <br />
 
-### Setup:
+## Setup:
 
 ```
 git clone https://github.com/km1414/CNN-models.git
@@ -22,7 +22,7 @@ pip3 install -r requirements.txt
 python3 yolo.py download_weights 
 ```
 
-### Run:
+## Run:
 
 Run on picture: ***python3 run_picture path/to/file***. Output will be save to ***images/***. Example:
 ```
