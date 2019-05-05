@@ -31,19 +31,13 @@ OBJ_THRESHOLD = 0.6
 NMS_THRESHOLD = 0.5
 
 
-# Create model and load weights
-yolo = create_model()
-load_weights(yolo, 'yolo.weights')
-# yolo.summary()
-
-
 # All yolo actions from input to output
-def make_yolo(original_image):
+def make_yolo(original_image, model):
 
     input_image = cv2.resize(original_image, (IMAGE_H, IMAGE_W)) / 255.
     input_image = input_image[:, :, ::-1]
     input_image = np.expand_dims(input_image, 0)
-    yolo_output = np.squeeze(yolo.predict(input_image))
+    yolo_output = np.squeeze(model.predict(input_image))
     boxes = filter_boxes(yolo_output, OBJ_THRESHOLD)
     boxes = non_max_suppress(boxes, NMS_THRESHOLD)
     colours = generate_colors(LABELS)
@@ -56,10 +50,10 @@ def make_yolo(original_image):
 ################### TEST YOLO ON IMAGE ###################
 
 # Objects detection from image
-def yolo_image(image_path):
+def yolo_image(image_path, model):
 
     original_image = cv2.imread(image_path)
-    image = make_yolo(original_image)
+    image = make_yolo(original_image, model)
     new_path = 'images/yolo_' + image_path.split('/')[-1]
     cv2.imwrite(new_path, image)
     print("Output file saved to:", new_path)
@@ -69,7 +63,7 @@ def yolo_image(image_path):
 ################### TEST YOLO ON VIDEO ###################
 
 # Objects detection from video
-def yolo_video(video_path, faster_times=1):
+def yolo_video(video_path, model, faster_times=1):
 
     # Path for output video
     video_out = 'images/yolo_' + video_path.split('/')[-1]
@@ -86,7 +80,7 @@ def yolo_video(video_path, faster_times=1):
     for _ in tqdm(range(nb_frames)):
 
         ret, original_image = video_reader.read()
-        image = make_yolo(original_image)
+        image = make_yolo(original_image, model)
         video_writer.write(np.uint8(image))
 
     video_reader.release()
@@ -98,7 +92,7 @@ def yolo_video(video_path, faster_times=1):
 ################### YOLO LIVE STREAM ###################
 
 # Objects detection from live stream of webcam
-def yolo_live(mirror=True):
+def yolo_live(model, mirror=True):
 
     cap = cv2.VideoCapture(0)
 
@@ -108,7 +102,7 @@ def yolo_live(mirror=True):
         ret, frame = cap.read()
         if mirror:
             frame = cv2.flip(frame, 1)
-        image = make_yolo(frame)
+        image = make_yolo(frame, model)
         image = add_text(image)
 
         # Display the resulting frame
@@ -147,18 +141,26 @@ if __name__ == '__main__':
 
     if action == 'run_picture':
         if os.path.isfile(path_to_file):
-            yolo_image(path_to_file)
+            # Create model and load weights
+            yolo = create_model()
+            load_weights(yolo, 'yolo.weights')
+            yolo_image(path_to_file, yolo)
         else:
             print('Enter valid path to file.')
             sys.exit()
 
     if action == 'run_video':
         if os.path.isfile(path_to_file):
-            yolo_video(path_to_file, faster_times=1)
+            # Create model and load weights
+            yolo = create_model()
+            load_weights(yolo, 'yolo.weights')
+            yolo_video(path_to_file, yolo, faster_times=1)
         else:
             print('Enter valid path to file.')
             sys.exit()
 
     if action == 'run_live':
-        yolo_live()
-
+        # Create model and load weights
+        yolo = create_model()
+        load_weights(yolo, 'yolo.weights')
+        yolo_live(yolo)

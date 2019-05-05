@@ -30,7 +30,7 @@ python3 yolo.py run_picture images/test.jpg
 ```
 Run on video: ***python3 run_video path/to/file***. Output will be save to ***images/***. Example:
 ```
-python3 yolo.py run_picture images/test.mp4
+python3 yolo.py run_video images/test.mp4
 ```
 Run live stream:
 ```
