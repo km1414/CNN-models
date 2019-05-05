@@ -218,3 +218,21 @@ def draw_boxes(image, boxes, labels, colours):
                     colours[box['label']], 2)
 
     return image
+
+
+# Add text
+def add_text(image):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    bottomLeftCornerOfText = (2, 14)
+    fontScale = 0.6
+    fontColor = (255, 255, 255)
+    lineType = 1
+
+    cv2.putText(image, "Press 'q' to quit.",
+                bottomLeftCornerOfText,
+                font,
+                fontScale,
+                fontColor,
+                lineType)
+
+    return image

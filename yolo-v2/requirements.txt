@@ -1,0 +1,8 @@
+tensorflow
+tensorflow-gpu
+keras
+numpy
+wget
+tqdm
+opencv-python
+argparse

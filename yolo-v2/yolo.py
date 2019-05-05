@@ -16,11 +16,14 @@ Python 3. Keras. December 2017.
 """
 
 
-from helpers import load_weights, filter_boxes, non_max_suppress, generate_colors, draw_boxes, download_weights
+from helpers import load_weights, filter_boxes, non_max_suppress, generate_colors, draw_boxes, download_weights, add_text
 from architecture import create_model, LABELS, IMAGE_H, IMAGE_W
 import numpy as np
 from tqdm import tqdm
 import cv2
+import sys
+import os
+import argparse
 
 
 # Thresholds for confidence score and non-max suppression
@@ -28,14 +31,10 @@ OBJ_THRESHOLD = 0.6
 NMS_THRESHOLD = 0.5
 
 
-# Uncomment and download weighs file if needed
-# download_weights()
-
-
 # Create model and load weights
 yolo = create_model()
 load_weights(yolo, 'yolo.weights')
-yolo.summary()
+# yolo.summary()
 
 
 # All yolo actions from input to output
@@ -53,28 +52,27 @@ def make_yolo(original_image):
     return output_image
 
 
-################### TEST YOLO ON IMAGE ###################
 
+################### TEST YOLO ON IMAGE ###################
 
 # Objects detection from image
 def yolo_image(image_path):
 
     original_image = cv2.imread(image_path)
     image = make_yolo(original_image)
-    cv2.imshow('frame', image)
+    new_path = 'images/yolo_' + image_path.split('/')[-1]
+    cv2.imwrite(new_path, image)
+    print("Output file saved to:", new_path)
 
-
-yolo_image('images/test.jpg')
 
 
 ################### TEST YOLO ON VIDEO ###################
-
 
 # Objects detection from video
 def yolo_video(video_path, faster_times=1):
 
     # Path for output video
-    video_out = '/'.join(video_path.split('/')[:-1]) + '/out_' + video_path.split('/')[-1]
+    video_out = 'images/yolo_' + video_path.split('/')[-1]
 
     # Set video reader and writer
     video_reader = cv2.VideoCapture(video_path)
@@ -93,13 +91,11 @@ def yolo_video(video_path, faster_times=1):
 
     video_reader.release()
     video_writer.release()
+    print("Output file saved to:", video_out)
 
-
-yolo_video('images/test.mp4', faster_times=1)
 
 
 ################### YOLO LIVE STREAM ###################
-
 
 # Objects detection from live stream of webcam
 def yolo_live(mirror=True):
@@ -113,14 +109,56 @@ def yolo_live(mirror=True):
         if mirror:
             frame = cv2.flip(frame, 1)
         image = make_yolo(frame)
+        image = add_text(image)
 
         # Display the resulting frame
-        cv2.imshow('frame',image)
+        cv2.imshow('frame', image)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             cap.release()
             cv2.destroyAllWindows()
             break
 
 
-# Press 'q' to quit.
-yolo_live()
+
+
+
+# Run yolo
+if __name__ == '__main__':
+    # Instantiate the argument parser
+    parser = argparse.ArgumentParser(description='yolo v2')
+
+    # Add arguments
+    parser.add_argument('action', type=str, default='', help='A required integer positional argument')
+    parser.add_argument('path_to_file', type=str, default='', nargs='?', help='/path/to/file')
+
+    # Parse arguments
+    args = parser.parse_args()
+
+    # Parse arguments
+    action = args.action
+    path_to_file = args.path_to_file
+
+    if action not in ['download_weights', 'run_picture', 'run_video', 'run_live']:
+        print('Please specify the action: [download_weights, run_picture, run_video, run_live]')
+        sys.exit()
+
+    if action == 'download_weights':
+        download_weights()
+
+    if action == 'run_picture':
+        if os.path.isfile(path_to_file):
+            yolo_image(path_to_file)
+        else:
+            print('Enter valid path to file.')
+            sys.exit()
+
+    if action == 'run_video':
+        if os.path.isfile(path_to_file):
+            yolo_video(path_to_file, faster_times=1)
+        else:
+            print('Enter valid path to file.')
+            sys.exit()
+
+    if action == 'run_live':
+        yolo_live()
+
