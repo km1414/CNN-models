@@ -1,10 +1,10 @@
 # YOLO v2
 
 
-YOLO v2 model for objects detection from image, video and live stream from webcam. 
-Runs on pre-trained weights, GPU is preferred, CPU works as well.
+*YOLO v2 model for objects detection from image, video and live stream from webcam. 
+Runs on pre-trained weights, GPU is preferred, CPU works as well.*
 
-<img src="gifs/gif_1.gif" height="150"/> <img src="gifs/gif_2.gif" height="150"/> <img src="gifs/gif_3.gif" height="150"/>
+<img src="gifs/gif_1.gif" height="160"/> <img src="gifs/gif_2.gif" height="160"/> <img src="gifs/gif_3.gif" height="160"/>
 
 Papers: 
 * https://arxiv.org/pdf/1506.02640.pdf
